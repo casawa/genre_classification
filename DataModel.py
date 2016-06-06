@@ -104,8 +104,8 @@ class DataModel:
         Creates training and test sets for classification.
         """
         tracks = self.track_to_genre.keys()
-        train_tracks = tracks[:8000]
-        test_tracks = tracks[8000:10000]
+        train_tracks = tracks[:24000]
+        test_tracks = tracks[24000:30000]
 
         self.train_X = self.create_X(train_tracks)
         self.test_X = self.create_X(test_tracks)

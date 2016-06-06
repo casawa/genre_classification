@@ -1,16 +1,56 @@
 from DataModel import DataModel
 from keras.models import Model, Sequential
 from keras.layers import Input, Dense
+from keras.layers.recurrent import SimpleRNN
+from keras.callbacks import EarlyStopping
 
-NUM_EPOCH = 10
+NUM_EPOCH = 40
+HIDDEN_SIZE = 30
 
-def create_one_layer_model(input_size, output_size):
+def create_rnn_model(input_size, output_size):
+    """
+    Creates a simple neural architecture.
+    """
+    
+    model = Sequential()
+    model.add(SimpleRNN(output_size, input_dim=input_size))
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    return model
+
+def create_one_layer_tanh_model(input_size, output_size):
     """
     Creates a one layer neural architecture.
     """
     
     model = Sequential()
-    model.add(Dense(input_size/2, activation='sigmoid', input_shape=(input_size,)))
+    model.add(Dense(HIDDEN_SIZE, activation='tanh', input_shape=(input_size,)))
+    model.add(Dense(output_size, activation='softmax'))
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    return model
+
+def create_relu_sigmoid_model(input_size, output_size):
+    """
+    Creates a one layer neural architecture.
+    """
+    
+    model = Sequential()
+    model.add(Dense(HIDDEN_SIZE, activation='sigmoid', input_shape=(input_size,)))
+    model.add(Dense(HIDDEN_SIZE/2, activation='relu'))
+    model.add(Dense(output_size, activation='softmax'))
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    return model
+
+
+def create_one_layer_sigmoid_model(input_size, output_size):
+    """
+    Creates a one layer neural architecture.
+    """
+    
+    model = Sequential()
+    model.add(Dense(HIDDEN_SIZE, activation='sigmoid', input_shape=(input_size,)))
     model.add(Dense(output_size, activation='softmax'))
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -32,7 +72,9 @@ def evaluate_model(model, data_model, model_name):
     Evaluates a given a model
     """
     print "\n\nRunning", model_name
-    model.fit(data_model.train_X, data_model.train_y, nb_epoch=NUM_EPOCH)
+    early_stopping = EarlyStopping(monitor='val_loss', patience=2)
+
+    model.fit(data_model.train_X, data_model.train_y, nb_epoch=NUM_EPOCH, validation_split=0.2, callbacks=[early_stopping])
     score = model.evaluate(data_model.test_X, data_model.test_y)
 
     print model_name, 'Test Accuracy:', score[1]
@@ -45,7 +87,9 @@ def main():
     output_size = len(data_model.get_genres())
    
     evaluate_model(create_simple_model(input_size, output_size), data_model, "Simple")
-    evaluate_model(create_one_layer_model(input_size, output_size), data_model, "One Layer")
+    evaluate_model(create_one_layer_tanh_model(input_size, output_size), data_model, "One Layer tanh")
+    evaluate_model(create_one_layer_sigmoid_model(input_size, output_size), data_model, "One Layer sigmoid")
+    evaluate_model(create_relu_sigmoid_model(input_size, output_size), data_model, "RELU sigmoid")
 
 
 if __name__ == '__main__':
