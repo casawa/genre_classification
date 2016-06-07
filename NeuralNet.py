@@ -90,17 +90,21 @@ def main():
     input_size = len(data_model.top_words)
     output_size = len(data_model.get_genres())
    
-    simple_history = evaluate_model(create_simple_model(input_size, output_size), data_model, "Simple")
-    tanh_history = evaluate_model(create_one_layer_tanh_model(input_size, output_size), data_model, "One Layer tanh")
-    sigmoid_history = evaluate_model(create_one_layer_sigmoid_model(input_size, output_size), data_model, "One Layer sigmoid")
-    relu_sigmoid_history = evaluate_model(create_relu_sigmoid_model(input_size, output_size), data_model, "RELU sigmoid")
+#    simple_history = evaluate_model(create_simple_model(input_size, output_size), data_model, "Simple")
+#    tanh_history = evaluate_model(create_one_layer_tanh_model(input_size, output_size), data_model, "One Layer tanh")
 
-    sigmoid_epochs = [i for i in range(1, len(sigmoid_history['loss']) + 1)]
-    plt.plot(sigmoid_epochs, sigmoid_history['val_acc'])
-    plt.title('Validation Accuracy Over Time')
-    plt.ylabel('Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.savefig('One_Sigmoid_Val_Acc.png')
+    hidden_sizes = [i*10 for i in range(1, 7)]
+    for hidden_size in hidden_sizes:
+        HIDDEN_SIZE = hidden_size
+        sigmoid_history = evaluate_model(create_one_layer_sigmoid_model(input_size, output_size), data_model, "One Layer sigmoid")
+#    relu_sigmoid_history = evaluate_model(create_relu_sigmoid_model(input_size, output_size), data_model, "RELU sigmoid")
+
+#    sigmoid_epochs = [i for i in range(1, len(sigmoid_history['loss']) + 1)]
+#    plt.plot(sigmoid_epochs, sigmoid_history['val_acc'])
+#    plt.title('Validation Accuracy Over Time')
+#    plt.ylabel('Validation Accuracy')
+#    plt.xlabel('Epochs')
+#    plt.savefig('One_Sigmoid_Val_Acc.png')
     #plt.title('Loss and Accuracy History')
 
 
