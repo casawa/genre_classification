@@ -93,7 +93,7 @@ def main():
 #    simple_history = evaluate_model(create_simple_model(input_size, output_size), data_model, "Simple")
 #    tanh_history = evaluate_model(create_one_layer_tanh_model(input_size, output_size), data_model, "One Layer tanh")
 
-    hidden_sizes = [i*10 for i in range(1, 7)]
+    hidden_sizes = [i*10 for i in range(7, 11)]
     for hidden_size in hidden_sizes:
         HIDDEN_SIZE = hidden_size
         sigmoid_history = evaluate_model(create_one_layer_sigmoid_model(input_size, output_size), data_model, "One Layer sigmoid")

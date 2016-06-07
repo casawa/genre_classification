@@ -1,5 +1,5 @@
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC, SVC
 from DataModel import DataModel
 
 def main():
